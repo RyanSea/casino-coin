@@ -6,13 +6,13 @@ import "lib/solmate/src/tokens/ERC20.sol";
 /// @notice gambling token!
 contract Based is ERC20 {
 
-    constructor() ERC20("Based Casino Coin", "BASED", 18) {
+    constructor(string memory _name, string memory _symbol) ERC20(_name, _symbol, 18) {
         owner = msg.sender;
     }
 
-    address public owner;
+    address public owner; // 0x00000000000000000
 
-    uint256 internal priceMultiplier; 
+    uint256 internal priceMultiplier; // 0
 
     uint256 internal lastButtonPress;
 
@@ -34,10 +34,9 @@ contract Based is ERC20 {
         lastButtonPress = block.timestamp;
     }
 
-    function buy(uint256 amount) external payable {
-        uint256 cost = amount * ++priceMultiplier / 1e18;
 
-        require(msg.value >= cost, "INSUFFICIENT_ETH");
+    function buy() external payable returns (uint256 amount) {
+        amount = msg.value / ++priceMultiplier;
 
         _mint(msg.sender, amount);
     }
